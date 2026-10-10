@@ -1,0 +1,85 @@
+name: Bug report
+description: Report a reproducible problem in Editable Motion Paths
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for testing the prototype. Minimal reproduction files and short videos are especially helpful for viewport interaction bugs.
+  - type: input
+    id: addon_version
+    attributes:
+      label: Add-on version
+      placeholder: "0.9.4"
+    validations:
+      required: true
+  - type: input
+    id: blender_version
+    attributes:
+      label: Blender version
+      placeholder: "5.2.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: gpu
+    attributes:
+      label: GPU (if relevant)
+      placeholder: "Apple M-series / NVIDIA / AMD / Intel"
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Create a cube...
+        2. Add keys...
+        3. Drag...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: dropdown
+    id: autokey
+    attributes:
+      label: Auto Key state
+      options:
+        - Enabled
+        - Disabled
+        - Not relevant
+    validations:
+      required: true
+  - type: textarea
+    id: attachments
+    attributes:
+      label: Files / video / crash log
+      description: Drag a minimal .blend, video, screenshots or crash log here. Do not upload confidential production scenes.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I tested the latest release.
+          required: true
+        - label: I searched existing issues.
+          required: true

@@ -1,0 +1,48 @@
+name: Quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Compile Python sources
+        run: python -m compileall -q extension scripts
+
+      - name: Build extension archive
+        run: python scripts/build_extension.py
+
+      - name: Validate extension archive
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+
+          archives = list(Path("dist").glob("editable_motion_paths-*.zip"))
+          if len(archives) != 1:
+              raise SystemExit(f"Expected one extension archive, found {len(archives)}")
+
+          with zipfile.ZipFile(archives[0]) as archive:
+              names = set(archive.namelist())
+              required = {"__init__.py", "blender_manifest.toml"}
+              missing = required - names
+              if missing:
+                  raise SystemExit(f"Missing required archive files: {sorted(missing)}")
+              bad_member = archive.testzip()
+              if bad_member is not None:
+                  raise SystemExit(f"Corrupt ZIP member: {bad_member}")
+          PY

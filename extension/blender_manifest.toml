@@ -1,0 +1,10 @@
+schema_version = "1.0.0"
+id = "editable_motion_paths"
+version = "0.9.4"
+name = "Editable Motion Paths"
+tagline = "Edit motion paths directly in the 3D View"
+maintainer = "Editable Motion Paths contributors"
+type = "add-on"
+tags = ["Animation"]
+blender_version_min = "5.2.0"
+license = ["SPDX:GPL-3.0-or-later"]
