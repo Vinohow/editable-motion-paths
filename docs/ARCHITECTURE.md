@@ -30,11 +30,48 @@ F-Curves remain authoritative. The add-on does not create a Curve object and doe
 
 ## Blender 5 actions
 
-The implementation includes handling for layered Action/slot/channelbag access used by modern Blender versions, while retaining compatibility logic for legacy-style F-Curve access where available.
+F-Curves are read through the layered Action / slot / channelbag API of Blender 5.
 
 ## Path sampling
 
 The path is sampled from animation data into a runtime cache. The prototype avoids using repeated `scene.frame_set()` calls as the normal redraw sampling mechanism because frame mutation during interactive transforms can cause flicker and expensive scene reevaluation.
+
+## Targets
+
+A path belongs to a target: an object, or one pose bone of an armature. Targets are identified by name
+(`(object name, bone name)`), never by a kept RNA reference, so caches survive Undo/Redo.
+
+## Parent space
+
+The animated value is a *local* Location. Its world position depends on the parent space, which can change over time
+(animated parent, parent bones, constraints). For each frame the add-on stores an affine map:
+
+```text
+world(frame) = A(frame) @ local_location(frame) + b(frame)
+```
+
+- `A` is the linear part of the parent space. For bones it is obtained from `Bone.convert_local_to_pose`, so the
+  inherit options (rotation, scale, local location) are respected.
+- `b` is computed from the evaluated world position, so anything else that offsets the target is absorbed.
+
+Displaying the path only needs F-Curve evaluation and this map. Editing uses the inverse of `A(frame)`, which is why
+a dragged key lands under the pointer even when the parent is rotated at that frame.
+
+Static, unparented, unconstrained objects skip this step: their map is read from the live object.
+
+### Baking without touching the scene
+
+The map is baked in a temporary scene that links only the needed objects and has its own dependency graph.
+The user's scene never changes frame, the viewport does not flicker, and unkeyed poses are not lost. The temporary
+scene is removed immediately.
+
+One bake evaluates every Location-animated bone of the armature, so switching between controls is instant.
+
+### Staleness
+
+On each tick, the baked map of the current frame is compared with the live one. A difference means the parent space
+changed: the cache is dropped and baked again (when the user is not dragging, playing or scrubbing). A difference
+that survives a fresh bake is an unkeyed pose; it is remembered so it does not cause a bake loop.
 
 ## Runtime cache
 
@@ -66,6 +103,13 @@ Prototype history showed that GPU point-size behavior was not visually consisten
 - Keep ordinary Blender viewport navigation/selection available.
 - Prefer cache replacement over partially invalid intermediate draw state.
 
-## Future architecture questions
+## Settings
 
-Community testing should inform whether exact support for constraints, rigs and NLA can remain in Python or requires a different evaluation strategy.
+Per-scene state (what is shown, frame range) lives on the scene. Look and behavior (colors, sizes, snapping,
+performance) live in the add-on preferences so they are shared by every file.
+
+## Open questions
+
+- Drivers and NLA blending on the edited channels.
+- A native implementation could evaluate the parent space in Blender's own motion path code instead of a temporary
+  scene.

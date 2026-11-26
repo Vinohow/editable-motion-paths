@@ -4,6 +4,24 @@ Use this document for release candidates and bug reproduction. Record results se
 
 Suggested status values: `PASS`, `FAIL`, `BLOCKED`, `NOT TESTED`.
 
+## Automated tests
+
+The logic that does not need a window is covered by headless tests using Blender's `bpy` Python module:
+
+```bash
+pip install bpy==5.2.4
+python tests/test_core.py
+python tests/test_rigs.py
+python tests/test_bones.py
+```
+
+They cover path evaluation against the really evaluated motion (objects, bones, animated parents, constraints, IK,
+inherit options), key/handle/tangent editing, simulated gizmo drags, operators, the panel layout, translations and
+performance on a 400-bone rig.
+
+They do **not** cover real mouse input, GPU drawing, or Blender's gizmo system. The manual matrix below stays
+required for those.
+
 ## Test environment header
 
 Record before every full run:
@@ -23,7 +41,7 @@ Record before every full run:
 ## A. Packaging and lifecycle
 
 - [ ] A01 - Install release ZIP with **Install from Disk**.
-- [ ] A02 - Extension appears as `Editable Motion Paths`.
+- [ ] A02 - Extension appears as `Vino Editable Motion Paths`.
 - [ ] A03 - Enable extension without Python error.
 - [ ] A04 - Motion Path sidebar appears in 3D View.
 - [ ] A05 - Save preferences/restart Blender; extension remains usable.
@@ -210,7 +228,7 @@ For both **keys** and **handles**:
 
 ## R. Range modes
 
-- [ ] R01 - Between Keys uses expected first/last relevant key.
+- [ ] R01 - Keyframes range uses expected first/last relevant key.
 - [ ] R02 - Around Current Frame uses configured Before frames.
 - [ ] R03 - Around Current Frame uses configured After frames.
 - [ ] R04 - Scene mode respects scene start/end.
@@ -252,20 +270,57 @@ Record viewport FPS qualitatively or quantitatively when possible.
 - [ ] U07 - Return to original workspace → controls valid.
 - [ ] U08 - Open/close N-panel during editing → no crash.
 
-## V. Parenting / constraints / advanced animation
+## V. Parenting / constraints
 
-These are exploratory until exact support is declared.
-
-- [ ] V01 - Static parent transform.
-- [ ] V02 - Animated parent Location.
-- [ ] V03 - Parent rotation affecting child world path.
-- [ ] V04 - Copy Location constraint.
-- [ ] V05 - Child Of constraint.
-- [ ] V06 - Driver affecting Location.
-- [ ] V07 - NLA strip influencing Location.
-- [ ] V08 - Multiple action/slot configurations.
+- [ ] V01 - Static parent transform: path matches the motion.
+- [ ] V02 - Animated parent Location: path matches the motion.
+- [ ] V03 - Animated parent rotation: path matches, and a dragged key stays under the pointer.
+- [ ] V04 - Key the parent on the current frame with Auto Refresh on → child path updates by itself.
+- [ ] V05 - Auto Refresh off → the panel says the path may be outdated; Refresh fixes it.
+- [ ] V06 - Object with a Track To / Copy Rotation constraint.
+- [ ] V07 - Object parented to a bone.
+- [ ] V08 - Driver or NLA strip on Location (exploratory, see Known Limitations).
 
 For any mismatch, attach a minimal scene and label the report `evaluation`.
+
+## V2. Pose bones
+
+- [ ] VB01 - Pose Mode, bone with Location keys → path appears on the bone head.
+- [ ] VB02 - Drag a key → the bone goes there on that frame.
+- [ ] VB03 - Handles, Alt-click, Alt-drag, constraints and snap behave as on objects.
+- [ ] VB04 - IK control of a limb: the limb follows the edited path.
+- [ ] VB05 - Root or parent bone animated in rotation: path matches, dragged key stays under the pointer.
+- [ ] VB06 - Switch between two controls of the same rig → instant, no pause.
+- [ ] VB07 - Selected mode shows the paths of all selected bones.
+- [ ] VB08 - Pose a bone without keying it, then select another control → the unkeyed pose is NOT lost.
+- [ ] VB09 - The current frame never changes while paths are calculated.
+- [ ] VB10 - FK bone (rotation keys only) → path shown, panel says "View only".
+- [ ] VB11 - Rigify metarig with only the object animated → paths of the selected bones shown in Pose Mode.
+- [ ] VB15 - Selected bones still shown in Object Mode and Edit Mode.
+- [ ] VB16 - Bone Point = Tail → path follows the tip of the bone.
+- [ ] VB17 - Change a rotation key of a parent on another frame → path updates by itself.
+- [ ] VB12 - Object Mode on the armature → path of the armature object.
+- [ ] VB13 - Production rig (Rigify or similar): first display time is acceptable; check Performance section.
+- [ ] VB14 - Undo/Redo after editing a bone path.
+
+## V3. Keys from the panel
+
+- [ ] VK01 - Add Key at Current Frame inserts and selects a key.
+- [ ] VK02 - Hover a path → a point follows the mouse, snapped to frames, with the frame number.
+- [ ] VK03 - Click → key added at that frame, motion unchanged, current frame unchanged, Ctrl+Z removes it.
+- [ ] VK05 - Drag starting on the path → no key; box select still works.
+- [ ] VK06 - No preview close to a key or a handle; keys stay draggable.
+- [ ] VK07 - No preview while playing, scrubbing or dragging.
+- [ ] VK08 - FK bone path: click adds a rotation key, the pose is unchanged on every frame.
+- [ ] VK04 - Delete removes the selected keys (single and multi-selection), Undo restores them.
+
+## V4. Preferences and language
+
+- [ ] VP01 - Change a color in the panel, open a new file → the color is kept.
+- [ ] VP02 - Same settings appear in Preferences → Add-ons → Vino Editable Motion Paths.
+- [ ] VP03 - Reset to Defaults restores everything.
+- [ ] VP04 - Blender in English → interface in English.
+- [ ] VP05 - Blender in French → interface in French.
 
 ## W. Save/load
 

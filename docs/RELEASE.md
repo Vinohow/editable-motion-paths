@@ -59,7 +59,7 @@ Run [Testing](TESTING.md) on the platforms available to you. Record PASS/FAIL an
 Recommended tag format:
 
 ```text
-v0.9.4
+v0.11.0
 ```
 
 Attach the installable ZIP as a GitHub Release asset. Do not tell users to install GitHub's automatically generated repository source ZIP.
