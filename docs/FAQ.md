@@ -26,7 +26,7 @@ A corner uses Vector-like spatial behavior for a sharp direction change. Smooth 
 
 ## Why use Alt-drag if Alt-click already makes the key smooth?
 
-Alt-click is the fast toggle. Alt-drag is for control: the drag direction and length define the initial tangent instead of accepting an automatically shaped curve.
+Alt-click is the fast toggle. Alt-drag is for control: the drag direction and length define the initial tangent instead of accepting an automatically shaped curve. It works the same way on the control points of dense keys.
 
 ## Does it support Auto Key?
 
@@ -34,15 +34,29 @@ Auto Key interaction is part of the prototype's intended workflow and should upd
 
 ## Can I change key sizes and colors?
 
-Yes. Open the Appearance section. Key/handle rendering is designed to be consistent across Windows and macOS HiDPI/Retina displays.
+Yes. Open the Appearance section of the panel, or the add-on preferences. Key/handle rendering is designed to be consistent across Windows and macOS HiDPI/Retina displays.
 
 ## Does it support pose bones?
 
-Not as a declared supported feature yet.
+Yes. Since 0.11 every selected bone that moves has a path, including FK bones and Rigify controls, in every mode.
+
+Keys can be dragged on bones animated in Location (IK controls, root, hips). FK paths are view only, but you can click them to add keys.
+
+## How do I add a key on the path?
+
+Hover the path: a point appears, snapped to a frame. Click: the key is added there without changing the motion.
 
 ## Does it support constraints and animated parents?
 
-These cases need broader testing. The lightweight path evaluator may not exactly match every dependency-graph-driven world transform. See Known Limitations.
+Yes, since 0.10. The parent space is evaluated per frame, so the path matches the evaluated motion and a dragged key lands where you drop it. See Known Limitations for the details.
+
+## Which languages are available?
+
+English, and French when Blender's language is set to French. Translations live in `extension/translations.py`; contributions are welcome.
+
+## My colors and sizes are gone after an update
+
+Since 0.10 they are stored in the add-on preferences instead of each scene. Set them once and they follow you in every file.
 
 ## Where should I report a bug?
 

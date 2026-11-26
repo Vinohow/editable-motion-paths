@@ -13,6 +13,36 @@ This document defines the intended interaction contract. Treat unexpected deviat
 | `Shift + click` | Key | Add/remove key from multi-selection |
 | `Alt + click` | Key | Toggle corner ↔ smooth |
 | `Alt + drag` | Key | Draw/size manual aligned tangent |
+| `Alt + click` | Control point (dense keys) | Smooth Path around it |
+| `Alt + drag` | Control point (dense keys) | Draw the tangent of the control curve |
+
+## Panel actions
+
+| Button | Result |
+|---|---|
+| Add Key at Current Frame | Key the current values of the active object or bone (like the I key) |
+| Delete | Delete the selected path keys |
+| Corner / Smooth | Same as `Alt + click` on the selected key |
+| Refresh | Recalculate the paths, including the motion of parents and constraints |
+| Use Real Keys / Use Control Points | Switch dense keys between the two modes (`Shift + Alt + C`) |
+| Smooth Path | Replace the path around the selected control points by a clean curve (`Alt + click`) |
+
+## Targets
+
+| Mode | Path shown for |
+|---|---|
+| Object Mode | The active object (editable) + its active or selected bones |
+| Pose Mode | The active bone (or every selected bone) |
+| Edit Mode | Same as Object Mode, view only |
+
+## Hover insertion
+
+| Input | Target | Expected behavior |
+|---|---|---|
+| Hover | Path, away from keys | A point snaps to the nearest whole frame, with its number |
+| Click | Path | Insert a key at that frame; the motion does not change |
+| Drag | Path | Nothing inserted |
+| Hover | Close to a key or a handle | No preview: the key or handle has priority |
 
 ## During drag
 

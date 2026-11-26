@@ -6,7 +6,7 @@ This roadmap is intentionally conservative. The public prototype phase prioritiz
 
 Goals:
 
-- publish source and installable ZIP on GitHub;
+- publish source and installable ZIP on GitHub and on extensions.blender.org;
 - collect interaction/stability feedback;
 - test Windows and macOS thoroughly;
 - begin Linux verification;
@@ -41,17 +41,19 @@ Possible additions only if validated by feedback:
 
 ## Phase 3 - Animation coverage
 
-Investigate:
+Done in 0.10:
 
 - pose bones;
 - animated parents;
-- constraints;
-- drivers;
-- NLA;
-- exact dependency-graph evaluated trajectories;
-- multiple transform channels beyond Location.
+- constraints on parents;
+- exact dependency-graph evaluated trajectories.
 
-These items may require a deeper architecture than the current lightweight F-Curve evaluator.
+Still to investigate:
+
+- drivers and NLA on the edited channels;
+- box/lasso selection and keyboard shortcuts for path keys;
+- click on the path to jump to a frame, pinned paths;
+- support for Blender 5.0 / 5.1.
 
 ## Phase 4 - Evaluate upstream potential
 

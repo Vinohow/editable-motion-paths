@@ -3,16 +3,21 @@
 ## Requirements
 
 - Blender 5.2.0 or newer.
-- Current prototype target: object Location animation.
+- Location animation of objects and pose bones.
+
+## Install from Blender
+
+1. Go to **Edit → Preferences → Get Extensions**.
+2. Search for **Vino Editable Motion Paths** and click **Install**.
 
 ## Install a release ZIP
 
-1. Download the latest `editable_motion_paths_*.zip` from GitHub Releases.
+1. Download the latest `vino_editable_motion_paths-*.zip` from GitHub Releases.
 2. Open Blender.
 3. Go to **Edit → Preferences → Get Extensions**.
 4. Open the top-right menu and choose **Install from Disk**.
 5. Choose the ZIP.
-6. Enable **Editable Motion Paths** if necessary.
+6. Enable **Vino Editable Motion Paths** if necessary.
 7. In the 3D View press `N`, then open the **Motion Path** tab.
 
 The installable ZIP must contain `blender_manifest.toml` and `__init__.py` at its root.
@@ -42,7 +47,7 @@ or create a local Blender extension repository and symlink the `extension/` dire
 ### macOS/Linux symlink example
 
 ```bash
-ln -s /absolute/path/to/editable-motion-paths/extension /absolute/path/to/local-extension-repo/editable_motion_paths
+ln -s /absolute/path/to/editable-motion-paths/extension /absolute/path/to/local-extension-repo/vino_editable_motion_paths
 ```
 
 ### Windows
@@ -61,10 +66,11 @@ Keep your development checkout outside Blender-managed directories so uninstall/
 
 ### The path does not appear
 
-- Select an object.
+- Select an object, or a bone in Pose Mode.
 - Insert at least two Location keyframes.
-- Confirm **Trajectory** is enabled in the panel.
-- Confirm the selected display mode includes the active object.
+- Confirm **Show Path** is enabled in the panel.
+- Read the status line of the panel: it says why nothing is displayed (no Location keyframes, connected bone...).
+- Make sure gizmos are enabled in the viewport, otherwise the keys cannot be clicked.
 
 ### Keys are hard to see
 

@@ -21,7 +21,7 @@ jobs:
           python-version: "3.13"
 
       - name: Compile Python sources
-        run: python -m compileall -q extension scripts
+        run: python -m compileall -q extension scripts tests
 
       - name: Build extension archive
         run: python scripts/build_extension.py
@@ -32,13 +32,13 @@ jobs:
           from pathlib import Path
           import zipfile
 
-          archives = list(Path("dist").glob("editable_motion_paths-*.zip"))
+          archives = list(Path("dist").glob("*.zip"))
           if len(archives) != 1:
               raise SystemExit(f"Expected one extension archive, found {len(archives)}")
 
           with zipfile.ZipFile(archives[0]) as archive:
               names = set(archive.namelist())
-              required = {"__init__.py", "blender_manifest.toml"}
+              required = {"__init__.py", "translations.py", "blender_manifest.toml"}
               missing = required - names
               if missing:
                   raise SystemExit(f"Missing required archive files: {sorted(missing)}")
